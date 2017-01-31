@@ -7,4 +7,4 @@ install:
   - mix local.hex --force
   - mix deps.get
 script:
-  - cd backend && mix test
+  - mix test
