@@ -25,12 +25,17 @@ defmodule Dashboard.GameTest do
   describe "A game between Bob and Charlie" do
     setup [:create_game, :add_bob_and_charlie]
 
-    test "Bob is a player", context do
+    test "Bob is playing", context do
       [maybe_bob] = context.game
       |> Game.find_players_by_name("Bob")
       assert maybe_bob.name == "Bob"
     end
 
+    test "Charlie is playing", context do
+      [maybe_charlie] = context.game
+      |> Game.find_players_by_name("Charlie")
+      assert maybe_charlie.name == "Charlie"
+    end
   end
 
   defp create_game(_context) do
@@ -44,4 +49,24 @@ defmodule Dashboard.GameTest do
     %{context | game: game_with_players}
   end
 
+  describe "A game with 2 players having the same name" do
+    setup [:create_game]
+
+    test "2 players with the same name can enter the game", context do
+      [bob1, bob2] = context.game
+      |> Game.add_player("Bob")
+      |> Game.add_player("Bob")
+      |> Game.find_players_by_name("Bob")
+      assert bob1.name == "Bob"
+      assert bob2.name == "Bob"
+    end
+
+    test "2 players with the same name will have different ids", context do
+      [bob1, bob2] = context.game
+      |> Game.add_player("Bob")
+      |> Game.add_player("Bob")
+      |> Game.find_players_by_name("Bob")
+      assert bob1.id != bob2.id
+    end
+  end
 end
