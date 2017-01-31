@@ -14,7 +14,7 @@ defmodule Dashboard.GameTest do
       assert 0 == new_game.next_player_id
     end
 
-    test "Every added player increases the next_player_id" do
+    test "Every player has a unique id" do
       new_game = %Game{}
       |> Game.add_player("Foo")
       |> Game.add_player("Bar")
