@@ -17,14 +17,19 @@ defmodule Dashboard.GameServerTest do
     end
   end
 
+  defp start_game_server(_context) do
+    {:ok, pid} = GameServer.start_link(new_id)
+    [pid: pid]
+  end
+
   describe "Setting up the game" do
-    test "Adding players" do
-      {:ok, pid} = GameServer.start_link(new_id)
-      GameServer.add_player(pid, "Bob")
-      %Game{players: players} = GameServer.add_player(pid, "Charlie")
-      assert Enum.member? players, "Bob"
-      assert Enum.member? players, "Charlie"
+    setup :start_game_server
+
+    test "Adding  a player", context do
+      %Game{players: players} = GameServer.add_player(context.pid, "Charlie")
+      assert Enum.any? players, fn p -> p.name == "Charlie" end
     end
+
   end
 
 end

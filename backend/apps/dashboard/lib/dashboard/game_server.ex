@@ -33,7 +33,7 @@ defmodule Dashboard.GameServer do
   end
 
   def handle_call({:add_player, name}, _from, game) do
-    updated_game = %Game{game | players: [name | game.players]}
+    updated_game = Game.add_player(game, name)
     {:reply, updated_game, updated_game}
   end
 end
