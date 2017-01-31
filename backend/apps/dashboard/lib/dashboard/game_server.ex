@@ -17,6 +17,10 @@ defmodule Dashboard.GameServer do
     GenServer.call(pid, :get_state)
   end
 
+  def add_player(pid, name) do
+    GenServer.call(pid, {:add_player, name})
+  end
+
   #
   # SERVER API
   #
@@ -26,5 +30,10 @@ defmodule Dashboard.GameServer do
 
   def handle_call(:get_state, _from, state) do
     {:reply, state, state}
+  end
+
+  def handle_call({:add_player, name}, _from, game) do
+    updated_game = %Game{game | players: [name | game.players]}
+    {:reply, updated_game, updated_game}
   end
 end
