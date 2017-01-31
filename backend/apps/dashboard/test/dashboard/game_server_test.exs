@@ -18,10 +18,12 @@ defmodule Dashboard.GameServerTest do
   end
 
   describe "Setting up the game" do
-    test "Add players" do
+    test "Adding players" do
       {:ok, pid} = GameServer.start_link(new_id)
-      %Game{players: players} = GameServer.add_player(pid, "Bob")
+      GameServer.add_player(pid, "Bob")
+      %Game{players: players} = GameServer.add_player(pid, "Charlie")
       assert Enum.member? players, "Bob"
+      assert Enum.member? players, "Charlie"
     end
   end
 
