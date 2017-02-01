@@ -36,7 +36,8 @@ defmodule Dashboard.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [ {:uuid, "~> 1.1"}
+    [ {:uuid, "~> 1.1"},
+      {:eqc_ex, "~> 1.4", only: :test}
     ]
   end
 end
