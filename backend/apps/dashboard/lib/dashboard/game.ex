@@ -23,6 +23,8 @@ end
 defmodule Dashboard.Game do
   alias Dashboard.{Game, Player}
 
+  @capacity 6
+
   defstruct players: [],
     next_player_id: 0
 
@@ -31,8 +33,14 @@ defmodule Dashboard.Game do
     |> Enum.filter(fn p -> p.name == name end)
   end
 
-  def add_player(game, name) do
+  def add_player(%Game{players: players} = game, name) when length(players) < @capacity do
     new_player = %Player{name: name, id: game.next_player_id}
-    %Dashboard.Game{game | players: [new_player | game.players], next_player_id: game.next_player_id + 1}
+    {:ok, %Dashboard.Game{game |
+                          players: [new_player | game.players],
+                          next_player_id: game.next_player_id + 1}}
+  end
+
+  def add_player(_, _) do
+    {:error, "A game can have up to 6 players"}
   end
 end

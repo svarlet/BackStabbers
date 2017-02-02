@@ -26,7 +26,7 @@ defmodule Dashboard.GameServerTest do
     setup :start_game_server
 
     test "Adding a player", context do
-      %Game{players: players} = GameServer.add_player(context.pid, "Charlie")
+      {:ok, %Game{players: players}} = GameServer.add_player(context.pid, "Charlie")
       assert Enum.any? players, fn p -> p.name == "Charlie" end
     end
 
