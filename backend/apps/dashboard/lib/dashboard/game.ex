@@ -14,7 +14,7 @@ end
 defmodule Dashboard.Player do
   defstruct name: "",
     id: -1,
-    sex: nil,
+    gender: nil,
     class: %Dashboard.Class{},
     race: %Dashboard.Race{},
     stats: %Dashboard.PlayerStats{}
