@@ -13,9 +13,9 @@ defmodule Gateway.GameChannelTest do
       assert is_pid(:global.whereis_name(id))
     end
 
-    test "Add the player to the game on join", %{id: id} do
+    test "Add the player to the game on join", _context do
       assert_broadcast "new_player", %Game{players: players}
-      assert Enum.any?(players, @username)
+      assert Enum.any?(players, fn p -> p.name == @username end)
     end
   end
 
