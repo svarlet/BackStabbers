@@ -13,7 +13,7 @@ defmodule Dashboard.GameServerTest do
 
     test "Server state is initialized to a new Game" do
       {:ok, pid} = GameServer.start_link(new_id)
-      %Game{} = GameServer.get_state(pid)
+      {:ok, %Game{}} = GameServer.get_state(pid)
     end
   end
 
@@ -25,9 +25,10 @@ defmodule Dashboard.GameServerTest do
   describe "Setting up the game" do
     setup :start_game_server
 
-    test "Adding a player", context do
-      {:ok, %Game{players: players}} = GameServer.add_player(context.pid, "Charlie")
-      assert Enum.any? players, fn p -> p.name == "Charlie" end
+    test "Adding a player updates the game and returns the player's id", context do
+      {:ok, {player_id, %Game{players: players}}} = GameServer.add_player(context.pid, "Charlie")
+      charlie = Enum.find(players, fn p -> p.name == "Charlie" end)
+      assert charlie.id == player_id
     end
 
   end

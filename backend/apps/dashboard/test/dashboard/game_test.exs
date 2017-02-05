@@ -15,8 +15,8 @@ defmodule Dashboard.GameTest do
     end
 
     test "Every player has a unique id" do
-      {:ok, game} = Game.add_player(%Game{}, "Foo")
-      {:ok, game} = Game.add_player(game, "Bar")
+      {:ok, {_player_1_id, game}} = Game.add_player(%Game{}, "Foo")
+      {:ok, {_player_2_id, game}} = Game.add_player(game, "Bar")
       assert 2 == game.next_player_id
     end
   end
@@ -35,17 +35,21 @@ defmodule Dashboard.GameTest do
     end
   end
 
+  #
+  # TEST SETUP UTILS
+  #
+
   defp create_game(_context) do
     [game: %Game{}]
   end
 
   defp add_bob(context) do
-    {:ok, game} = Game.add_player(context.game, "Bob")
+    {:ok, {_bob_id, game}} = Game.add_player(context.game, "Bob")
     %{context | game: game}
   end
 
   defp add_charlie(context) do
-    {:ok, game} = Game.add_player(context.game, "Charlie")
+    {:ok, {_charlie_id, game}} = Game.add_player(context.game, "Charlie")
     %{context | game: game}
   end
 
@@ -53,8 +57,9 @@ defmodule Dashboard.GameTest do
     setup [:create_game, :add_bob, :add_bob]
 
     test "2 players with the same name can enter the game", context do
-      [bob1, bob2] = context.game
-      |> Game.find_players_by_name("Bob")
+      [bob1, bob2] =
+        context.game
+        |> Game.find_players_by_name("Bob")
       assert bob1.name == "Bob"
       assert bob2.name == "Bob"
     end
@@ -70,9 +75,13 @@ defmodule Dashboard.GameTest do
     setup :create_game
 
     test "A game can have up to 6 players", context do
+      update_game_with_player = fn p, game ->
+        {:ok, {_player_id, game}} = Game.add_player(game, p)
+        game
+      end
       game_with_6_players =
         ~w{p1 p2 p3 p4 p5 p6}
-        |> Enum.reduce(context.game, fn p, game -> Game.add_player(game, p) end)
+        |> Enum.reduce(context.game, update_game_with_player)
       assert {:error, "A game can have up to 6 players"} == Game.add_player(game_with_6_players, "p7")
     end
   end

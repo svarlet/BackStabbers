@@ -28,12 +28,12 @@ defmodule Dashboard.GameServer do
     {:ok, %Game{}}
   end
 
-  def handle_call(:get_state, _from, state) do
-    {:reply, state, state}
+  def handle_call(:get_state, _from, game) do
+    {:reply, {:ok, game}, game}
   end
 
   def handle_call({:add_player, name}, _from, game) do
-    updated_game = Game.add_player(game, name)
-    {:reply, updated_game, updated_game}
+    {:ok, {player_id, updated_game}} = Game.add_player(game, name)
+    {:reply, {:ok, {player_id, updated_game}}, updated_game}
   end
 end

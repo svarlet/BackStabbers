@@ -35,9 +35,10 @@ defmodule Dashboard.Game do
 
   def add_player(%Game{players: players} = game, name) when length(players) < @capacity do
     new_player = %Player{name: name, id: game.next_player_id}
-    {:ok, %Dashboard.Game{game |
-                          players: [new_player | game.players],
-                          next_player_id: game.next_player_id + 1}}
+    updated_game = %Dashboard.Game{game |
+                                   players: [new_player | game.players],
+                                   next_player_id: game.next_player_id + 1}
+    {:ok, {new_player.id, updated_game}}
   end
 
   def add_player(_, _) do
