@@ -1,0 +1,28 @@
+* Terminology
+** A user is an unidentified person in the system but not participating to a game yet.
+** A player is a user with a name and an id who is currently participating to a game.
+
+* Specifications
+** A user can...
+*** start a game
+**** this user receives this GAME ID
+**** this GAME ID should be unique
+**** this GAME ID should be easy to share (few alphanum characters)
+*** end a game
+**** this user must be a player in that game
+**** this game is stopped
+***** this game does no longer accept any interaction but request for its state.
+***** every player in this game is immediately notified that the game is stopped
+**** this game is deleted after 2 minutes
+*** join a game with a specific id
+**** the user must declare its PLAYER_NAME to participate
+**** this player receives a unique PLAYER_ID
+**** players with idential names are allowed (but discouraged)
+**** every player in that game is immediately notified of this new participant
+** A player can...
+*** update its characteristics
+**** gender (male or female)
+**** force (a non strictly positive integer value)
+**** level (1 to 10)
+**** race (a player can have up to 2 races)
+**** class (a player can have up to 2 classes)
