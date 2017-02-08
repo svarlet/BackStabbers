@@ -10,6 +10,10 @@ defmodule Gateway.GameChannelTest do
   describe "Joining a game" do
     setup [:generate_game_id, :start_game_server, :join_channel]
 
+    test "Reply with the player id", context do
+      assert %{player_id: _} = context.join_reply
+    end
+
     test "Add the player to the game on join", _context do
       assert_broadcast "new_player", %Game{players: players}
       assert Enum.any?(players, fn p -> p.name == @username end)
@@ -28,10 +32,10 @@ defmodule Gateway.GameChannelTest do
   defp join_channel(%{game_id: game_id}) do
     topic = "game:#{game_id}"
     payload = %{"username": @username}
-    {:ok, _, _socket} =
+    {:ok, reply, socket} =
       socket("user_id", %{})
       |> subscribe_and_join(GameChannel, topic, payload)
-    :ok
+    [socket: socket, join_reply: reply]
   end
 
 end
