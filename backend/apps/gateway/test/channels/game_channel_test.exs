@@ -1,17 +1,14 @@
 defmodule Gateway.GameChannelTest do
   use Gateway.ChannelCase
+
   alias Gateway.GameChannel
   alias Dashboard.Game
-  import TestHelper
+  alias GameId.GenGameId
 
   @username "Marylin"
 
-  describe "Interacting with a game server via a channel" do
-    setup [:join_channel]
-
-    test "Create a game on join", %{id: id} do
-      assert is_pid(:global.whereis_name(id))
-    end
+  describe "Joining a game" do
+    setup [:generate_game_id, :start_game_server, :join_channel]
 
     test "Add the player to the game on join", _context do
       assert_broadcast "new_player", %Game{players: players}
@@ -19,13 +16,22 @@ defmodule Gateway.GameChannelTest do
     end
   end
 
-  defp join_channel(_) do
-    id = new_id()
-    {:ok, _, socket} =
-      socket("user_id", %{})
-      |> subscribe_and_join(GameChannel, "game:#{id}", %{"username": @username})
+  defp generate_game_id(_context) do
+    [game_id: GenGameId.generate()]
+  end
 
-    {:ok, socket: socket, id: id}
+  defp start_game_server(context) do
+    Dashboard.start_game_server context.game_id
+    :ok
+  end
+
+  defp join_channel(%{game_id: game_id}) do
+    topic = "game:#{game_id}"
+    payload = %{"username": @username}
+    {:ok, _, _socket} =
+      socket("user_id", %{})
+      |> subscribe_and_join(GameChannel, topic, payload)
+    :ok
   end
 
 end

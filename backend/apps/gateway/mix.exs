@@ -21,7 +21,7 @@ defmodule Gateway.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Gateway, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :dashboard]]
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :dashboard, :game_id]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,6 +37,8 @@ defmodule Gateway.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:uuid, "~> 1.1"},
-     {:dashboard, in_umbrella: true}]
+     {:dashboard, in_umbrella: true},
+     {:game_id, in_umbrella: true}
+    ]
   end
 end

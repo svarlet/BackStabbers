@@ -6,31 +6,33 @@ defmodule Dashboard.GameServerTest do
   alias Dashboard.GameServer
   alias Dashboard.Game
 
-  describe "Starting a game server" do
-    test "Starting the server" do
-      assert {:ok, _pid} = GameServer.start_link(new_id)
-    end
-
-    test "Server state is initialized to a new Game" do
-      {:ok, pid} = GameServer.start_link(new_id)
-      {:ok, %Game{}} = GameServer.get_state(pid)
-    end
+  test "Starting a game server with an id already in use" do
+    assert {:ok, pid} = GameServer.start_link("foobar")
+    assert {:ok, ^pid} = GameServer.start_link("foobar")
   end
 
-  defp start_game_server(_context) do
-    {:ok, pid} = GameServer.start_link(new_id)
-    [pid: pid]
-  end
+  describe "Setting up a game server" do
+    setup [:generate_game_id, :start_game_server]
 
-  describe "Setting up the game" do
-    setup :start_game_server
+    test "Server state is initialized to a new Game", context do
+      {:ok, %Game{}} = GameServer.get_state({:global, context.game_id})
+    end
 
     test "Adding a player updates the game and returns the player's id", context do
-      {:ok, {player_id, %Game{players: players}}} = GameServer.add_player(context.pid, "Charlie")
+      {:ok, {player_id, %Game{players: players}}} =
+      {:global, context.game_id}
+      |> GameServer.add_player("Charlie")
       charlie = Enum.find(players, fn p -> p.name == "Charlie" end)
       assert charlie.id == player_id
     end
-
   end
 
+  defp generate_game_id(_context) do
+    [game_id: new_id() |> to_string()]
+  end
+
+  defp start_game_server(context) do
+    GameServer.start_link(context.game_id)
+    :ok
+  end
 end

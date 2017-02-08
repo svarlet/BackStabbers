@@ -6,19 +6,19 @@ defmodule Dashboard.GameServer do
   #
   # PUBLIC API
   #
-  def start_link(id) do
-    case GenServer.start_link(__MODULE__, [], name: {:global, id}) do
+  def start_link(game_id) when is_binary(game_id) do
+    case GenServer.start_link(__MODULE__, [], name: {:global, game_id}) do
       {:ok, pid} -> {:ok, pid}
       {:error, {:already_started, pid}} -> {:ok, pid}
     end
   end
 
-  def get_state(pid) do
-    GenServer.call(pid, :get_state)
+  def get_state(server) do
+    GenServer.call(server, :get_state)
   end
 
-  def add_player(pid, name) do
-    GenServer.call(pid, {:add_player, name})
+  def add_player(server, name) do
+    GenServer.call(server, {:add_player, name})
   end
 
   #

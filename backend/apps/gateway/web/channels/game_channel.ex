@@ -4,8 +4,7 @@ defmodule Gateway.GameChannel do
   alias Dashboard.GameServer
 
   def join("game:"<>id, %{"username": username}, socket) do
-    with {:ok, game_pid} <- Dashboard.start_game_server(id),
-         {:ok, {_player_id, _game}} <- GameServer.add_player(game_pid, username),
+    with {:ok, {_player_id, _game}} <- GameServer.add_player({:global, id}, username),
            _ <- send(self(), {:broadcast_state, "new_player"}) do
       {:ok, socket}
     else

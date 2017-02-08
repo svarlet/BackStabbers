@@ -7,5 +7,6 @@ defmodule Gateway.Router do
 
   scope "/api", Gateway do
     pipe_through :api
+    get "/game/new", GameController, :new
   end
 end

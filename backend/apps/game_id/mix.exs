@@ -1,8 +1,8 @@
-defmodule Dashboard.Mixfile do
+defmodule GameId.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :dashboard,
+    [app: :game_id,
      version: "0.1.0",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
@@ -19,7 +19,7 @@ defmodule Dashboard.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger],
-     mod: {Dashboard, []}]
+     mod: {GameId, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -36,8 +36,6 @@ defmodule Dashboard.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [ {:uuid, "~> 1.1"},
-      {:eqc_ex, "~> 1.4", only: :test}
-    ]
+    [{:hashids, "~> 2.0"}]
   end
 end
