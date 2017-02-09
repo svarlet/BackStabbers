@@ -12,6 +12,10 @@ defmodule Gateway.GameChannel do
     end
   end
 
+  def join("game:"<>_id, _payload, _socket) do
+    {:error, :missing_username}
+  end
+
   def handle_info({:broadcast_state, reason}, socket) do
     id =
       socket.topic
